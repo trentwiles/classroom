@@ -1,0 +1,51 @@
+{% include 'includes/header.html' %}
+<h1>Debugger</h1>
+<script>
+    function cf() {
+        $.ajax({
+            type: "GET",
+            url: "https://fbi.gov/cdn-cgi/trace",
+            success: function (data, textStatus) {
+                var colo = data.split('\n')[6].trim().substr(-3)
+                $.ajax({
+                    type: "GET",
+                    url: "https://speed.cloudflare.com/locations",
+                    success: function (data, textStatus) {
+                        for(var i = 0; i < data.length; i++){
+                            if (data[i]["iata"] == colo){
+                                document.getElementById("cf_dc").innerHTML = colo + " (" + data[i]["city"] + ")"
+                                break
+                            }
+                            
+                        }
+                    }
+                });
+            }
+        });
+    }
+    cf(); // should run when the page loads? I think?
+</script>
+<hr />
+<table>
+    <tr>
+        <td>Cloudflare Datacenter</td>
+        <td id="cf_dc">Loading...</td>
+    </tr>
+    <tr>
+        <td>Python Version</td>
+        <td>{{python}}</td>
+    </tr>
+    <tr>
+        <td>Flask Version</td>
+        <td>{{flask_v}}</td>
+    </tr>
+    <tr>
+        <td>IP Address</td>
+        <td>{{ip}}</td>
+    </tr>
+    <tr>
+        <td>Browser Information</td>
+        <td>{{ua["browser"]["name"]}} {{ua["browser"]["version"]}} ({{ua["os"]["name"]}})</td>
+    </tr>
+</table>
+{% include 'includes/footer.html' %}
