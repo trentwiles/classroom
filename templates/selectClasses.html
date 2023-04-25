@@ -3,15 +3,17 @@
 <br>
 <script>
     function submit() {
-        var checkedList = []
+        var items = ""
 
         $("input").each(function (index) {
             if ($(this).is(':checked')) {
-                checkedList.push($(this).attr('id'))
+                items += $(this).attr('id') + ", "
             }
         });
 
-        $.post( "/api/v1/selectClasses", {'classes': checkedList}, function( data ){
+        items = items.slice(0, -2)
+
+        $.post( "/api/v1/selectClasses", {'classes': items}, function( data ){
             //window.location.href = "/step2"
         } );
 

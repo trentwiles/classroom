@@ -21,9 +21,8 @@ def s1():
 # API route to go along with step one
 @app.route('/api/v1/selectClasses', methods=["POST"])
 def a1():
-    c = request.form.get('classes[]')
-    for x in request.form:
-        print(request.form.get(x))
+    c = request.form.get('classes')
+    classesPicked = [int(num) for num in c.split(",")] # convert the string of "1, 2, 3, 4" into an array
     #print(c)
     return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
 
