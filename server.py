@@ -2,6 +2,7 @@ from flask import Flask, Response, render_template, request
 import sys, flask
 import httpagentparser
 import classroom
+import json
 
 app = Flask(__name__)
 
@@ -16,6 +17,16 @@ def s1():
     # To do this, I needed to include Python's enumerate function.
     # https://paste.gg/p/anonymous/4c94ffb214e14e5187cd51c19fea80b9
     return render_template("selectClasses.html", version=GLOBAL_VERSION, classes=classroom.getAllClasses(), enumerate=enumerate)
+
+# API route to go along with step one
+@app.route('/api/v1/selectClasses', methods=["POST"])
+def a1():
+    c = request.form.get('classes[]')
+    for x in request.form:
+        print(request.form.get(x))
+    #print(c)
+    return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
+
 
 @app.route('/dashboard')
 def dash():
