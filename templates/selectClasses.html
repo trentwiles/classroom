@@ -1,3 +1,40 @@
 {% include 'includes/header.html' %}
 <h1>Step One: Select Your Classes</h1>
+<br>
+<script>
+    function submit() {
+        var checkedList = []
+
+        $("input").each(function (index) {
+            if ($(this).is(':checked')) {
+                checkedList.push($(this).attr('id'))
+            }
+        });
+
+        $.post( "/api/v1/selectClasses", {'classes': checkedList}, function( data ){
+            window.location.href = "/step2"
+        } );
+
+        console.table(checkedList)
+
+        
+    }
+</script>
+<table>
+    <tr>
+        <th></th>
+        <th>Class</th>
+        <th>ID</th>
+    </tr>
+    {% for index, item in enumerate(classes["ids"]) %}
+    <tr>
+        <td><input type="checkbox" id={{classes["ids"][index]}} name="class"></td>
+        <td>{{ classes["ids"][index] }}</td>
+        <td>{{ classes["names"][index] }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+<br>
+<a href="javascript:submit()"><button>Next</button></a>
 {% include 'includes/footer.html' %}
