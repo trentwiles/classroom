@@ -1,8 +1,9 @@
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, render_template, request, url_for, redirect
 import sys, flask
 import httpagentparser
 import classroom
 import json
+import os
 
 app = Flask(__name__)
 
@@ -12,8 +13,11 @@ GLOBAL_VERSION = "0.0.1 alpha"
 def index():
     return render_template("index.html", version=GLOBAL_VERSION)
 
+# First, the user selects what classes they want
 @app.route('/step1')
 def s1():
+    if os.path.exists('temp/classes.json'):
+        return redirect(url_for('step2'))
     # To do this, I needed to include Python's enumerate function.
     # https://paste.gg/p/anonymous/4c94ffb214e14e5187cd51c19fea80b9
     return render_template("selectClasses.html", version=GLOBAL_VERSION, classes=classroom.getAllClasses(), enumerate=enumerate)
@@ -24,8 +28,23 @@ def a1():
     c = request.form.get('classes')
     classesPicked = [int(num) for num in c.split(",")] # convert the string of "1, 2, 3, 4" into an array
     #print(c)
+    with open('temp/classes.json', 'a') as w:
+        w.write(json.dumps(classesPicked))
+        w.close()
     return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
 
+@app.route('/step2')
+def s2():
+    return render_template("tolerance.html", version=GLOBAL_VERSION)
+
+# Debugging route to reset everything
+@app.route('/reset')
+def reset():
+    for f in os.listdir('temp'):
+        if f != ".gitignore":
+            os.remove('temp/' + f)
+            print("deleted temp/" + f)
+    return "OK"
 
 @app.route('/dashboard')
 def dash():
