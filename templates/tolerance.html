@@ -13,10 +13,22 @@
         <td>Max Late Days</td>
     </tr>
     <tr>
-        <td><input type="text" id="date"></td>
+        <td>
+            <select id="times">
+                <option value="230" selected>2:30PM</option>
+                <option value="300">3:00PM</option>
+                <option value="330">3:30PM</option>
+                <option value="400">4:00PM</option>
+            </select>
+        </td>
         <td>Schedule Send Time</td>
     </tr>
+    <tr>
+        <td></td>
+        <td></td>
+    </tr>
 </table>
+<button onclick="save()" id="save">Save & Continue</button>
 <script>
     const slider = document.querySelector('#slider');
     slider.addEventListener('change', function () {
@@ -24,16 +36,10 @@
         if (slider.value != 1) {
             document.getElementById("custom").innerHTML = slider.value + " Days";
         } else {
-            document.getElementById("custom").innerHTML = "1 Days";
+            document.getElementById("custom").innerHTML = "1 Day";
         }
     });
 
-    // Get a reference to the input field
-    const myDatepicker = document.querySelector('#date');
-    flatpickr(myDatepicker, {
-        enableTime: true,
-        dateFormat: "H:i",
-});
-
+    selectedTime = document.querySelector('#times').value
 </script>
 {% include 'includes/footer.html' %}
