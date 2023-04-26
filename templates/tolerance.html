@@ -1,4 +1,39 @@
 {% include 'includes/header.html' %}
 <h1>Step Two: Settings</h1>
 <!-- here do stuff with how long work can be done late, should certain keywords be ignored, etc... -->
+<table>
+    <tr>
+        <th>Configuration</th>
+        <th>Setting</th>
+    </tr>
+    <tr>
+        <td><input type="range" min="1" max="10" value="1" class="slider" id="slider">
+            <p id="custom">1 Day</p>
+        </td>
+        <td>Max Late Days</td>
+    </tr>
+    <tr>
+        <td><input type="text" id="date"></td>
+        <td>Schedule Send Time</td>
+    </tr>
+</table>
+<script>
+    const slider = document.querySelector('#slider');
+    slider.addEventListener('change', function () {
+        // This function will be called whenever the slider value changes
+        if (slider.value != 1) {
+            document.getElementById("custom").innerHTML = slider.value + " Days";
+        } else {
+            document.getElementById("custom").innerHTML = "1 Days";
+        }
+    });
+
+    // Get a reference to the input field
+    const myDatepicker = document.querySelector('#date');
+    flatpickr(myDatepicker, {
+        enableTime: true,
+        dateFormat: "H:i",
+});
+
+</script>
 {% include 'includes/footer.html' %}
