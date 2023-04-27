@@ -7,7 +7,7 @@
         <th>Setting</th>
     </tr>
     <tr>
-        <td><input type="range" min="1" max="10" value="1" class="slider" id="slider">
+        <td><input type="range" min="0" max="10" value="1" class="slider" id="slider">
             <p id="custom">1 Day</p>
         </td>
         <td>Max Late Days</td>
@@ -24,8 +24,8 @@
         <td>Schedule Send Time</td>
     </tr>
     <tr>
-        <td></td>
-        <td></td>
+        <td><input type="text" id="email" name="email"></td>
+        <td>Email Address</td>
     </tr>
 </table>
 <button onclick="save()" id="save">Save & Continue</button>
@@ -40,6 +40,17 @@
         }
     });
 
-    selectedTime = document.querySelector('#times').value
+    function save() {
+        document.getElementById("save").innerHTML = "Saving..."
+
+        late = document.querySelector('#slider').value
+        selectedTime = document.querySelector('#times').value
+        email = document.querySelector('#email').value
+
+        $.post("/api/v1/tolerance", {'late': late, 'selectedTime': selectedTime, 'email': email}, function (result) {
+            window.location.href = "/dashboard"
+        });
+
+    }
 </script>
 {% include 'includes/footer.html' %}

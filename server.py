@@ -25,6 +25,8 @@ def s1():
 # API route to go along with step one
 @app.route('/api/v1/selectClasses', methods=["POST"])
 def a1():
+    if os.path.exists('temp/classes.json'):
+        return redirect(url_for('dashboard'))
     c = request.form.get('classes')
     classesPicked = [int(num) for num in c.split(",")] # convert the string of "1, 2, 3, 4" into an array
     #print(c)
@@ -35,7 +37,18 @@ def a1():
 
 @app.route('/step2')
 def s2():
+    if os.path.exists('temp/settings.json'):
+        return redirect(url_for('dashboard'))
     return render_template("tolerance.html", version=GLOBAL_VERSION)
+
+@app.route('/api/v1/tolerance', methods=["POST"])
+def a2():
+    email = request.form.get('email')
+    late = request.form.get('late')
+    selected = request.form.get('selectedTime')
+    with open('temp/settings.json', 'a') as w:
+        w.write(json.dumps({"email": email, "selected": selected[0] + ":" + selected[1] + selected[2], "late": late}))
+    return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
 
 # Debugging route to reset everything
 @app.route('/reset')
