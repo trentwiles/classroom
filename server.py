@@ -38,7 +38,7 @@ def a1():
 @app.route('/step2')
 def s2():
     if os.path.exists('temp/settings.json'):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('dash'))
     return render_template("tolerance.html", version=GLOBAL_VERSION)
 
 @app.route('/api/v1/tolerance', methods=["POST"])
@@ -48,6 +48,30 @@ def a2():
     selected = request.form.get('selectedTime')
     with open('temp/settings.json', 'a') as w:
         w.write(json.dumps({"email": email, "selected": selected[0] + ":" + selected[1] + selected[2], "late": late}))
+    return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
+
+@app.route('/api/v1/quickSave', methods=["POST"])
+def quickSave():
+    item = request.form.get('item')
+    newValue = request.form.get('value')
+    settings_settings = ["email", "selected", "late"]
+    valid = False
+    for x in settings_settings:
+        if item == x:
+            valid = True
+    if valid == False:
+        return Response(json.dumps({"message": "Invalid setting change attempt: setting '" + str(item) + "' does not exist"}), content_type="application/json"), 400
+    contents = ""
+    with open('temp/settings.json', 'r') as r:
+        contents = json.loads(r)
+        r.close()
+    
+    contents[item] = newValue
+
+    with open('temp/settings.json', 'w') as w:
+        w.write(json.dumps(contents))
+        w.close()
+    
     return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
 
 # Debugging route to reset everything
