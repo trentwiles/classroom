@@ -67,9 +67,24 @@ def dash():
 
     if not os.path.exists('temp/settings.json') or not os.path.exists('temp/classes.json'):
         return redirect("/?missing_configuration=1")
+    
+    classes = 0
+    with open('temp/classes.json', 'r') as r:
+        for x in r.readlines():
+            classes += 1
+        r.close()
+
+    email = ""
+    tol = ""
+    dTime = ""
+    with open('temp/settings.json', 'r') as r:
+        api = json.load(r)
+        email = api["email"]
+        tol = api["late"]
+        dTime = api["selected"]
     name = "Trent"
 
-    return render_template("dashboard.html", name=name, version=GLOBAL_VERSION)
+    return render_template("dashboard.html", name=name, version=GLOBAL_VERSION, numClasses = classes, email=email, tolerance=tol, lateTime=dTime)
 
 @app.route('/debug')
 def debug():
