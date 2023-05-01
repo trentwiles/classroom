@@ -14,7 +14,7 @@
         items = items.slice(0, -2)
 
         $.post( "/api/v1/selectClasses", {'classes': items}, function( data ){
-            //window.location.href = "/step2"
+            window.location.href = "/step2"
         } );
 
         //console.table(checkedList)

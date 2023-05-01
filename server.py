@@ -17,7 +17,7 @@ def index():
 @app.route('/step1')
 def s1():
     if os.path.exists('temp/classes.json'):
-        return redirect(url_for('step2'))
+        return redirect(url_for('s2'))
     # To do this, I needed to include Python's enumerate function.
     # https://paste.gg/p/anonymous/4c94ffb214e14e5187cd51c19fea80b9
     return render_template("selectClasses.html", version=GLOBAL_VERSION, classes=classroom.getAllClasses(), enumerate=enumerate)
@@ -26,7 +26,7 @@ def s1():
 @app.route('/api/v1/selectClasses', methods=["POST"])
 def a1():
     if os.path.exists('temp/classes.json'):
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('dash'))
     c = request.form.get('classes')
     classesPicked = [int(num) for num in c.split(",")] # convert the string of "1, 2, 3, 4" into an array
     #print(c)
@@ -65,6 +65,8 @@ def dash():
     # CHANGE THIS ONCE THERE IS ACCESS TO THE
     # CLASSROOM API
 
+    if not os.path.exists('temp/settings.json') or not os.path.exists('temp/classes.json'):
+        return redirect("/?missing_configuration=1")
     name = "Trent"
 
     return render_template("dashboard.html", name=name, version=GLOBAL_VERSION)
