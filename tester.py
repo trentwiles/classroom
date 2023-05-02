@@ -1,4 +1,4 @@
-from classroom import *
+import sfactory
 
 
-print(getAllClasses())
+print(sfactory.createS())
