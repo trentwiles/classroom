@@ -28,6 +28,12 @@ def getAllClasses():
         classNames.append(c["name"])
     return {"ids": classIDs, "names": classNames}
 
+def getClassByID(id):
+    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken())
+    for c in api.json()["courses"]:
+        if int(c["id"]) == id:
+            return c
+
 """
 api = requests.get("https://classroom.googleapis.com/v1/courses/538643163021/courseWork?access_token=" + getToken())
 if api.status_code != 200:
