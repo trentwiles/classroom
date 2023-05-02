@@ -34,6 +34,20 @@ def getClassByID(id):
         if int(c["id"]) == id:
             return c
 
+def getIDfromName(name):
+    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken())
+    for c in api.json()["courses"]:
+        if c["name"] == name:
+            return c["id"]
+    return None
+
+def getCourseLoadByName(listOfNames):
+    for x in listOfNames:
+        id = getIDfromName()
+        if id != None:
+            api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork")
+            print(api.json())
+
 """
 api = requests.get("https://classroom.googleapis.com/v1/courses/538643163021/courseWork?access_token=" + getToken())
 if api.status_code != 200:
