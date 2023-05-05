@@ -41,33 +41,13 @@ def getIDfromName(name):
             return c["id"]
     return None
 
-def getCourseLoadByName(listOfNames):
-    for x in listOfNames:
-        id = getIDfromName()
-        if id != None:
-            api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork")
-            print(api.json())
+def getCourseLoadByID(id):
+    api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork?access_token=" + getToken())
+    return api.json()
 
-"""
-api = requests.get("https://classroom.googleapis.com/v1/courses/538643163021/courseWork?access_token=" + getToken())
-if api.status_code != 200:
-    print(error_msg)
-    sys.exit()
-print("This is the work you have to do:")
-for c in api.json()["courseWork"]:
-    print(c["title"])
-    #print(c)
-    # I had to looks this up, this replaces the weird date format Google provides with the
-    # epoch time so I can work with it
-    time_obj = datetime.datetime.fromisoformat(c["creationTime"].replace('Z', '+00:00'))
-    epoch_time = int(time_obj.timestamp())
-    time_now = int(time.time())
-
-    age = time_now - epoch_time
-
-    due_at = int(datetime.datetime(c["dueDate"]["year"], c["dueDate"]["month"], c["dueDate"]["day"]).timestamp())
-    print(c["dueDate"]["year"], c["dueDate"]["month"], c["dueDate"]["day"])
-    if (time_now - due_at) >= 0:
-        print("=== THIS IS LATE ===")
-    print("This was posted " + str(round(age/3600/24, 1)) + " days ago")
-    """
+def getCourseLoadByName(name):
+    id = getIDfromName(name)
+    if id != None:
+        api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork?access_token=" + getToken())
+        return api.json()
+    return None
