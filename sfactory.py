@@ -21,13 +21,38 @@ def chatGPT(message):
 
     return completion.choices[0].message["content"]
 
+def determineWorkTime(dueIn, difCoef, totalClasses):
+    # This is the procrastination code
+    # dueIn is going to be an int
+
+    if dueIn >= 0.00 and dueIn < 1.00:
+        return (difCoef * 4)
+    elif dueIn >= 1.00 and dueIn < 24.00:
+        return (difCoef * 3)
+    elif dueIn >= 24.00 and dueIn < 48.00:
+        return (difCoef * 2)
+    elif dueIn >= 48.00 and dueIn < 96.00:
+        return (difCoef * 1)
+    else:
+        return (difCoef * 0.5)
 
 def createS():
+    burnerVariable = ""
+
+    # "difCoef" is a numeric value to determine how hard each class is in comparison to others
+    difCoef = 1 # starts at 1
+    toSubtractEachTime = 0 # by default
+    totalClasses = 0
+    workToDoOrdered = [] # this list holds all of the work in order, as designated by ChatGPT and the due time
     # Step One: Set up the chatGPT prompt
     chatGPTprompt = "Assuming that math typically has the most homework, next science/physics, then english, then foreign languages, then electives, how would this list of class titles rank? Please list them in order, one per line, no other text. Thanks! Here is the list: \n"
     # Step Two: Check if the configuration files set up before the dashboard is accessed exist
     if not os.path.isfile('temp/classes.json') or not os.path.isfile('temp/settings.json'):
         return Exception(FileNotFoundError)
+    with open('temp/classes.json') as r:
+        s = json.loads(r.read())
+        totalClasses = len(s)
+        toSubtractEachTime = 1/totalClasses
     # Step Three: Open the classes file. This contains all of the class IDs
     with open('temp/classes.json') as r:
         s = json.loads(r.read())
@@ -37,12 +62,30 @@ def createS():
                 # Step Four: add each class name to the ChatGPT prompt so they can be ordered
                 chatGPTprompt += n + "\n"
     print(chatGPTprompt)
-    time.sleep(60)
+    #time.sleep(60)
     response = chatGPT(chatGPTprompt)
     for orderedClass in response.split("\n"):
         print("30 minutes for " + orderedClass)
         for x in classroom.getCourseLoadByName(orderedClass)["courseWork"]:
             # Step Five: Now fetch all of the course work for each class
-            dueAt = int(datetime.datetime(x["dueDate"]["year"], x["dueDate"]["month"], x["dueDate"]["day"]).timestamp())
-            timeNow = int(time.time())
-            print(timeNow - dueAt)
+            #print(x)
+            try:
+                dueAt = int(datetime.datetime(x["dueDate"]["year"], x["dueDate"]["month"], x["dueDate"]["day"]).timestamp())
+                timeNow = int(time.time())
+                dueIn = (dueAt - timeNow) / (3600 * 24)
+                # if the dueDate minus the current time is larger than 0, the assignment is due
+                if dueIn > 0:
+                    #print(x[""])
+                    #print("Due in " +  + " days")
+                    #print("Due @ timestamp: " + str(dueAt))
+                    #print(x)
+                    hoursUntilDue = round(dueIn, 2)
+                    allocatedTime = determineWorkTime(hoursUntilDue, difCoef, totalClasses)
+                    workToDoOrdered.append({"title": x["title"], "description": x["description"], "className": orderedClass, "dueIn": str(hoursUntilDue), "allocatedTime": allocatedTime})
+                else:
+                    burnerVariable = ""
+            except:
+                #print(" **** NO DUE DATE ***** ")
+                burnerVariable = ""
+            difCoef -= toSubtractEachTime
+    return workToDoOrdered
