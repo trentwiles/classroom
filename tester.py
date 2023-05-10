@@ -5,7 +5,7 @@ import tiktoken
 
 #
 
-print(sfactory.createS())
+sfactory.assemble(sfactory.createS())
 #print(sfactory.chatGPT("What is the weather in Northern Cape?"))
 """cw = classroom.getCourseLoadByID(598260968944)
 

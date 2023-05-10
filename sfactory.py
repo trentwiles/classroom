@@ -3,7 +3,7 @@ import classroom
 import json
 import openai
 from dotenv import load_dotenv
-import weasyprint
+from weasyprint import HTML, CSS
 import datetime
 import time
 
@@ -22,6 +22,7 @@ def chatGPT(message):
     return completion.choices[0].message["content"]
 
 def determineWorkTime(dueIn, difCoef, totalClasses):
+    print(difCoef)
     # This is the procrastination code
     # dueIn is going to be an int
 
@@ -52,6 +53,7 @@ def createS():
     with open('temp/classes.json') as r:
         s = json.loads(r.read())
         totalClasses = len(s)
+        print(totalClasses)
         toSubtractEachTime = 1/totalClasses
     # Step Three: Open the classes file. This contains all of the class IDs
     with open('temp/classes.json') as r:
@@ -81,11 +83,20 @@ def createS():
                     #print(x)
                     hoursUntilDue = round(dueIn, 2)
                     allocatedTime = determineWorkTime(hoursUntilDue, difCoef, totalClasses)
-                    workToDoOrdered.append({"title": x["title"], "description": x["description"], "className": orderedClass, "dueIn": str(hoursUntilDue), "allocatedTime": allocatedTime})
+                    workToDoOrdered.append({"title": x["title"], "description": x["description"], "className": orderedClass, "dueIn": str(hoursUntilDue), "allocatedTime": round(allocatedTime, 2)})
                 else:
                     burnerVariable = ""
             except:
                 #print(" **** NO DUE DATE ***** ")
                 burnerVariable = ""
-            difCoef -= toSubtractEachTime
+        difCoef -= toSubtractEachTime
     return workToDoOrdered
+
+def assemble(tasks):
+    html = "<html><body><h1>Tasks for Today</h1><table><tr><th>Assignment</th><th>Class</th><th>Time</th></tr>"
+    # "tasks" is a list of items with allocated time
+    for x in tasks:
+        html += "<tr><td>" + x["title"] + "</td><td>" + x["className"] + "</td><td>" + str(round(int(x["allocatedTime"]) * 60)) + "</td></tr>"
+    html += "</table></body></html>"
+    HTML(string=html).write_pdf('output.pdf')
+    return None
