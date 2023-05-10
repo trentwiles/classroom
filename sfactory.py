@@ -96,7 +96,11 @@ def assemble(tasks):
     html = "<html><body><h1>Tasks for Today</h1><table><tr><th>Assignment</th><th>Class</th><th>Time</th></tr>"
     # "tasks" is a list of items with allocated time
     for x in tasks:
-        html += "<tr><td>" + x["title"] + "</td><td>" + x["className"] + "</td><td>" + str(round(int(x["allocatedTime"]) * 60)) + "</td></tr>"
+        html += "<tr><td>" + x["title"] + "</td><td>" + x["className"] + "</td><td>" + str(float(x["allocatedTime"]) * 60) + " minutes</td></tr>"
+    print("=======================")
+    print(x["allocatedTime"])
+    print(float(x["allocatedTime"]))
+    print(float(x["allocatedTime"]) * 60)
     html += "</table></body></html>"
     HTML(string=html).write_pdf('output.pdf')
     return None
