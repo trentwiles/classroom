@@ -112,7 +112,11 @@ def dash():
 
 @app.route('/debug')
 def debug():
-    return render_template('debug.html', version=GLOBAL_VERSION, python=sys.version, flask_v=flask.__version__, ip=request.environ['REMOTE_ADDR'], ua=httpagentparser.detect(request.headers.get('User-Agent')), connected_via=request.scheme.upper())
+    if request.headers.get('X-Forwarded-For') != None:
+        ip = request.headers.get('X-Forwarded-For')
+    else:
+        ip = request.environ['REMOTE_ADDR']
+    return render_template('debug.html', version=GLOBAL_VERSION, python=sys.version, flask_v=flask.__version__, ip=ip, ua=httpagentparser.detect(request.headers.get('User-Agent')), connected_via=request.scheme.upper())
 
 if __name__ == '__main__':
     app.run(debug=True)
