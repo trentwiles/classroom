@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 
-GLOBAL_VERSION = "0.0.1 alpha"
+GLOBAL_VERSION = "0.0.3 beta"
 
 @app.route('/')
 def index():
