@@ -1,8 +1,26 @@
 {% include 'includes/header.html' %}
-    <h1>Classroom Schedule Manager</h1>
-    <hr />
-    <a href="/step1"><button>Sign in with Google</button></a>
-    <hr>
-    <h2>What is this?</h2>
-    <p>Classroom Schedule Manager is a tool that uses Google's API combined with ChatGPT to create a nightly schedule that prioritzes the work you need to get done.</p>
+<script>
+    function reset() {
+        $.get('/reset', function (response) {
+            // The 'response' parameter contains the data returned from the server
+            console.log(response);
+        })
+            .done(function () {
+                document.getElementById("reset").innerHTML = "Done!"
+            })
+            .fail(function () {
+                console.log('An error occurred during the GET request.');
+            });
+
+    }
+</script>
+<h1>Classroom Schedule Manager</h1>
+<hr />
+<a href="/step1"><button>Sign in with Google</button></a>
+<br>
+<a href="javascript:reset()"><button id="reset">Clear Settings</button></a>
+<hr>
+<h2>What is this?</h2>
+<p>Classroom Schedule Manager is a tool that uses Google's API combined with ChatGPT to create a nightly schedule that
+    prioritzes the work you need to get done.</p>
 {% include 'includes/footer.html' %}
