@@ -47,5 +47,14 @@
         <td>Browser Information</td>
         <td>{{ua["browser"]["name"]}} {{ua["browser"]["version"]}} ({{ua["os"]["name"]}})</td>
     </tr>
+    <tr>
+        <td>Connected via</td>
+        <td>
+            {{connected_via}}
+            {% if connected_via == 'HTTP' %}
+                (<strong><span style="color:red;">INSECURE!</span></strong>)
+            {% endif %}
+        </td>
+    </tr>
 </table>
 {% include 'includes/footer.html' %}
