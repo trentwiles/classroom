@@ -1,5 +1,22 @@
 {% include 'includes/header.html' %}
-    <h1>Classroom Schedule Manager</h1>
-    <hr />
-    <a href="/step1"><button>Sign in with Google</button></a>
+<script>
+    function reset(){
+    $.get('/reset', function (response) {
+        // The 'response' parameter contains the data returned from the server
+        console.log(response);
+    })
+        .done(function () {
+            document.getElementById("reset").innerHTML = "Done!"
+        })
+        .fail(function () {
+            console.log('An error occurred during the GET request.');
+        });
+    }
+
+</script>
+<h1>Classroom Schedule Manager</h1>
+<hr />
+<a href="/step1"><button>Sign in with Google</button></a>
+<br>
+<a href="javascript:reset()"><button id="reset">Clear Settings</button></a>
 {% include 'includes/footer.html' %}
