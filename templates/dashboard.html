@@ -1,4 +1,21 @@
 {% include 'includes/header.html' %}
+<script>
+    function reset() {
+        $.get('/reset', function (response) {
+            // The 'response' parameter contains the data returned from the server
+            console.log(response);
+        })
+            .done(function () {
+                document.getElementById("reset").innerHTML = "Done!"
+            })
+            .fail(function () {
+                console.log('An error occurred during the GET request.');
+            });
+
+    window.location.href = "/"
+
+    }
+</script>
 <h1>Classroom Schedule Manager</h1>
 <h3>Welcome back!</h3>
 <p>Email: {{email}}</p>
@@ -6,4 +23,6 @@
 <p># of classes tracked: {{numClasses}}</p>
 <p>Max days late: {{dLate}}</p>
 <a href="/s.pdf"><button>Preview Now</button></a>
+<br>
+<a href="javascript:reset()"><button id="reset">Clear Settings</button></a>
 {% include 'includes/footer.html' %}
