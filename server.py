@@ -1,9 +1,10 @@
-from flask import Flask, Response, render_template, request, url_for, redirect
+from flask import Flask, Response, render_template, request, url_for, redirect, send_file
 import sys, flask
 import httpagentparser
 import classroom
 import json
 import os
+import sfactory
 
 app = Flask(__name__)
 
@@ -117,6 +118,18 @@ def debug():
     else:
         ip = request.environ['REMOTE_ADDR']
     return render_template('debug.html', version=GLOBAL_VERSION, python=sys.version, flask_v=flask.__version__, ip=ip, ua=httpagentparser.detect(request.headers.get('User-Agent')), connected_via=request.scheme.upper())
+
+@app.route("/s.pdf")
+def s():
+    if os.path.exists('output.pdf'):
+        os.remove('output.pdf')
+    
+    if not os.path.exists('temp/settings.json'):
+        return redirect('/')
+    
+    sfactory.assemble(sfactory.createS())
+
+    return send_file('/output.pdf')
 
 if __name__ == '__main__':
     app.run(debug=True)
