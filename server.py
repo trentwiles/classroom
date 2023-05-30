@@ -49,6 +49,13 @@ def callback():
     )
     flow.fetch_token(authorization_response=request.url)
     credentials = flow.credentials
+    try:
+        os.remove("token.json")
+    except:
+        print("couldn't remove it :(")
+    
+    with open('token.json', 'a') as t:
+        t.write(json.dumps({"token": credentials.token}))
     # Store the credentials or use them to make API requests
     return redirect(url_for('index'))
 
