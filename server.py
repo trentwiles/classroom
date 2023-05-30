@@ -1,18 +1,62 @@
-from flask import Flask, Response, render_template, request, url_for, redirect, send_file
+from flask import Flask, Response, render_template, request, url_for, redirect, send_file, session
 import sys, flask
 import httpagentparser
 import classroom
 import json
 import os
 import sfactory
+from google_auth_oauthlib.flow import Flow
+import demo2
+
 
 app = Flask(__name__)
 
 GLOBAL_VERSION = "0.0.3 beta"
 
+app.secret_key = os.getenv("SECRET")
+
+
 @app.route('/')
 def index():
     return render_template("index.html", version=GLOBAL_VERSION)
+
+"""
+GOOGLE OAUTH LOGIN CONTENT STARTS HERE
+"""
+
+@app.route('/login')
+def login():
+    flow = Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=demo2.scopes(),
+        redirect_uri=url_for('callback', _external=True)
+    )
+    authorization_url, state = flow.authorization_url(
+        access_type='offline',
+        include_granted_scopes='true'
+    )
+    session['state'] = state
+    return redirect(authorization_url)
+
+@app.route('/callback')
+def callback():
+    state = session.pop('state', '')
+    flow = Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=demo2.scopes(),
+        state=state,
+        redirect_uri=url_for('callback', _external=True)
+    )
+    flow.fetch_token(authorization_response=request.url)
+    credentials = flow.credentials
+    # Store the credentials or use them to make API requests
+    return redirect(url_for('index'))
+
+
+
+"""
+GOOGLE OAUTH LOGIN CONTENT ENDS HERE
+"""
 
 # First, the user selects what classes they want
 @app.route('/step1')
@@ -129,7 +173,7 @@ def s():
     
     sfactory.assemble(sfactory.createS())
 
-    return send_file('/output.pdf')
+    return send_file('output.pdf')
 
 if __name__ == '__main__':
     app.run(debug=True)

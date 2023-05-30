@@ -14,6 +14,9 @@ os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',
     'https://www.googleapis.com/auth/classroom.coursework.me.readonly']
 
+def scopes():
+    return SCOPES
+
 # hacky solution to get rid off the credits error
 creds=None
 

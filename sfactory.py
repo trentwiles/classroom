@@ -68,27 +68,31 @@ def createS():
     response = chatGPT(chatGPTprompt)
     for orderedClass in response.split("\n"):
         print("30 minutes for " + orderedClass)
-        for x in classroom.getCourseLoadByName(orderedClass)["courseWork"]:
-            # Step Five: Now fetch all of the course work for each class
-            #print(x)
-            try:
-                dueAt = int(datetime.datetime(x["dueDate"]["year"], x["dueDate"]["month"], x["dueDate"]["day"]).timestamp())
-                timeNow = int(time.time())
-                dueIn = (dueAt - timeNow) / (3600 * 24)
-                # if the dueDate minus the current time is larger than 0, the assignment is due
-                if dueIn > 0:
-                    #print(x[""])
-                    #print("Due in " +  + " days")
-                    #print("Due @ timestamp: " + str(dueAt))
-                    #print(x)
-                    hoursUntilDue = round(dueIn, 2)
-                    allocatedTime = determineWorkTime(hoursUntilDue, difCoef, totalClasses)
-                    workToDoOrdered.append({"title": x["title"], "description": x["description"], "className": orderedClass, "dueIn": str(hoursUntilDue), "allocatedTime": round(allocatedTime, 2)})
-                else:
+        print(classroom.getCourseLoadByName(orderedClass))
+        try:
+            for x in classroom.getCourseLoadByName(orderedClass)["courseWork"]:
+                # Step Five: Now fetch all of the course work for each class
+                #print(x)
+                try:
+                    dueAt = int(datetime.datetime(x["dueDate"]["year"], x["dueDate"]["month"], x["dueDate"]["day"]).timestamp())
+                    timeNow = int(time.time())
+                    dueIn = (dueAt - timeNow) / (3600 * 24)
+                    # if the dueDate minus the current time is larger than 0, the assignment is due
+                    if dueIn > 0:
+                        #print(x[""])
+                        #print("Due in " +  + " days")
+                        #print("Due @ timestamp: " + str(dueAt))
+                        #print(x)
+                        hoursUntilDue = round(dueIn, 2)
+                        allocatedTime = determineWorkTime(hoursUntilDue, difCoef, totalClasses)
+                        workToDoOrdered.append({"title": x["title"], "description": x["description"], "className": orderedClass, "dueIn": str(hoursUntilDue), "allocatedTime": round(allocatedTime, 2)})
+                    else:
+                        burnerVariable = ""
+                except:
+                    #print(" **** NO DUE DATE ***** ")
                     burnerVariable = ""
-            except:
-                #print(" **** NO DUE DATE ***** ")
-                burnerVariable = ""
+        except:
+            print("no work to do for this class")
         difCoef -= toSubtractEachTime
     return workToDoOrdered
 
