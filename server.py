@@ -15,6 +15,8 @@ GLOBAL_VERSION = "0.0.3 beta"
 
 app.secret_key = os.getenv("SECRET")
 
+os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 
 @app.route('/')
 def index():
@@ -57,7 +59,7 @@ def callback():
     with open('token.json', 'a') as t:
         t.write(json.dumps({"token": credentials.token}))
     # Store the credentials or use them to make API requests
-    return redirect(url_for('index'))
+    return redirect(url_for('step1'))
 
 
 
