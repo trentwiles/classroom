@@ -59,7 +59,7 @@ def callback():
     with open('token.json', 'a') as t:
         t.write(json.dumps({"token": credentials.token}))
     # Store the credentials or use them to make API requests
-    return redirect(url_for('step1'))
+    return redirect(url_for('s1'))
 
 
 
@@ -166,6 +166,7 @@ def dash():
 
 @app.route('/debug')
 def debug():
+    print(session['state'])
     if request.headers.get('X-Forwarded-For') != None:
         ip = request.headers.get('X-Forwarded-For')
     else:
