@@ -19,7 +19,7 @@ GLOBAL_VERSION = "0.0.3 beta"
 app.secret_key = os.getenv("SECRET")
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
-os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
+#os.environ['OAUTHLIB_RELAX_TOKEN_SCOPE'] = '1'
 
 @app.route('/')
 def index():
