@@ -10,7 +10,7 @@ from google_auth_oauthlib.flow import Flow
 
 
 SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',
-    'https://www.googleapis.com/auth/classroom.coursework.me.readonly']
+    'https://www.googleapis.com/auth/classroom.coursework.me.readonly', 'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly']
 
 app = Flask(__name__)
 
