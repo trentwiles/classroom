@@ -9,8 +9,8 @@ from google_auth_oauthlib.flow import Flow
 #import demo2
 
 # this doesn't work for some weird reason
-SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',
-    'https://www.googleapis.com/auth/classroom.coursework.me.readonly', 'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly']
+# 
+SCOPES = ['https://www.googleapis.com/auth/classroom.student-submissions.me.readonly', 'https://www.googleapis.com/auth/classroom.courses.readonly']
 
 app = Flask(__name__)
 
