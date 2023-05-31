@@ -169,8 +169,7 @@ def dash():
 
 @app.route('/debug')
 def debug():
-    for key, value in session.items():
-        print(key, value)
+    print(session.items())
     if request.headers.get('X-Forwarded-For') != None:
         ip = request.headers.get('X-Forwarded-For')
     else:
