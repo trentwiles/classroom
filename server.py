@@ -6,8 +6,11 @@ import json
 import os
 import sfactory
 from google_auth_oauthlib.flow import Flow
-import demo2
+#import demo2
 
+
+SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',
+    'https://www.googleapis.com/auth/classroom.coursework.me.readonly']
 
 app = Flask(__name__)
 
@@ -30,7 +33,7 @@ GOOGLE OAUTH LOGIN CONTENT STARTS HERE
 def login():
     flow = Flow.from_client_secrets_file(
         'client_secret.json',
-        scopes=demo2.scopes(),
+        scopes=SCOPES,
         redirect_uri=url_for('callback', _external=True)
     )
     authorization_url, state = flow.authorization_url(
@@ -45,7 +48,7 @@ def callback():
     state = session.pop('state', '')
     flow = Flow.from_client_secrets_file(
         'client_secret.json',
-        scopes=demo2.scopes(),
+        scopes=SCOPES,
         state=state,
         redirect_uri=url_for('callback', _external=True)
     )
