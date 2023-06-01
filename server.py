@@ -66,7 +66,7 @@ def callback():
         t.write(json.dumps({"token": credentials.token}))
     # Store the credentials or use them to make API requests
     resp = make_response(render_template("home.html"))
-    resp.set_cookie('RANDOM_SECURE_SESSION_ID', RANDOM_SECURE_SESSION_ID)
+    resp.set_cookie('RANDOM_SECURE_SESSION_ID', str(RANDOM_SECURE_SESSION_ID))
 
     return resp
 
