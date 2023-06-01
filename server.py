@@ -68,7 +68,7 @@ def callback():
     resp = make_response(render_template("home.html"))
     resp.set_cookie('RANDOM_SECURE_SESSION_ID', RANDOM_SECURE_SESSION_ID)
 
-    return redirect(url_for('s1'))
+    return resp
 
 
 
