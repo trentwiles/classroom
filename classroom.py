@@ -14,7 +14,7 @@ def getToken(secure_id):
         print(error_msg)
         sys.exit()
     else:
-        with open("token.json", 'r') as t:
+        with open("token-" + str(secure_id) + ".json", 'r') as t:
             token = json.loads(t.read())["token"]
             return token
 
