@@ -4,3 +4,4 @@ credentials.json
 token.json
 *.pdf
 client_secret.json
+token*

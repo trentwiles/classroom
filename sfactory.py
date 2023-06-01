@@ -96,7 +96,7 @@ def createS():
         difCoef -= toSubtractEachTime
     return workToDoOrdered
 
-def assemble(tasks):
+def assemble(tasks, secure_id):
     css = "<style>body{ font-family: 'arial'; }</style>"
     html = "<html><body>" + css + "<h1>Tasks for Today</h1><table><tr><th>Assignment</th><th>Class</th><th>Time</th></tr>"
     # "tasks" is a list of items with allocated time

@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, request, url_for, redirect, send_file, session
+from flask import Flask, Response, render_template, request, url_for, redirect, send_file, session, make_response
 import sys, flask
 import httpagentparser
 import classroom
@@ -6,11 +6,12 @@ import json
 import os
 import sfactory
 from google_auth_oauthlib.flow import Flow
+import random
 #import demo2
 
 
 SCOPES = ['https://www.googleapis.com/auth/classroom.courses.readonly',
-    'https://www.googleapis.com/auth/classroom.coursework.me.readonly', 'https://www.googleapis.com/auth/classroom.student-submissions.me.readonly']
+    'https://www.googleapis.com/auth/classroom.coursework.me.readonly']
 
 app = Flask(__name__)
 
@@ -59,9 +60,14 @@ def callback():
     except:
         print("couldn't remove it :(")
     
-    with open('token.json', 'a') as t:
+    RANDOM_SECURE_SESSION_ID = random.randint(100000,10000000000)
+
+    with open('token-' + str(RANDOM_SECURE_SESSION_ID) + '.json', 'a') as t:
         t.write(json.dumps({"token": credentials.token}))
     # Store the credentials or use them to make API requests
+    resp = make_response(render_template("home.html"))
+    resp.set_cookie('RANDOM_SECURE_SESSION_ID', RANDOM_SECURE_SESSION_ID)
+
     return redirect(url_for('s1'))
 
 
@@ -77,7 +83,7 @@ def s1():
         return redirect(url_for('s2'))
     # To do this, I needed to include Python's enumerate function.
     # https://paste.gg/p/anonymous/4c94ffb214e14e5187cd51c19fea80b9
-    return render_template("selectClasses.html", version=GLOBAL_VERSION, classes=classroom.getAllClasses(), enumerate=enumerate)
+    return render_template("selectClasses.html", version=GLOBAL_VERSION, classes=classroom.getAllClasses(request.cookies.get("RANDOM_SECURE_SESSION_ID")), enumerate=enumerate)
 
 # API route to go along with step one
 @app.route('/api/v1/selectClasses', methods=["POST"])
@@ -94,7 +100,7 @@ def a1():
 
 @app.route('/step2')
 def s2():
-    if os.path.exists('temp/settings.json'):
+    if os.path.exists('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json'):
         return redirect(url_for('dash'))
     return render_template("tolerance.html", version=GLOBAL_VERSION)
 
@@ -103,7 +109,7 @@ def a2():
     email = request.form.get('email')
     late = request.form.get('late')
     selected = request.form.get('selectedTime')
-    with open('temp/settings.json', 'a') as w:
+    with open('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json', 'a') as w:
         w.write(json.dumps({"email": email, "selected": selected[0] + ":" + selected[1] + selected[2], "late": late}))
     return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
 
@@ -119,13 +125,13 @@ def quickSave():
     if valid == False:
         return Response(json.dumps({"message": "Invalid setting change attempt: setting '" + str(item) + "' does not exist"}), content_type="application/json"), 400
     contents = ""
-    with open('temp/settings.json', 'r') as r:
+    with open('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json', 'r') as r:
         contents = json.loads(r)
         r.close()
     
     contents[item] = newValue
 
-    with open('temp/settings.json', 'w') as w:
+    with open('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json', 'w') as w:
         w.write(json.dumps(contents))
         w.close()
     
@@ -146,7 +152,7 @@ def dash():
     # CHANGE THIS ONCE THERE IS ACCESS TO THE
     # CLASSROOM API
 
-    if not os.path.exists('temp/settings.json') or not os.path.exists('temp/classes.json'):
+    if not os.path.exists('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json') or not os.path.exists('temp/classes.json'):
         return redirect("/?missing_configuration=1")
     
     classes = 0
@@ -158,7 +164,7 @@ def dash():
     email = ""
     tol = ""
     dTime = ""
-    with open('temp/settings.json', 'r') as r:
+    with open('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json', 'r') as r:
         api = json.load(r)
         email = api["email"]
         tol = api["late"]
@@ -181,7 +187,7 @@ def s():
     if os.path.exists('output.pdf'):
         os.remove('output.pdf')
     
-    if not os.path.exists('temp/settings.json'):
+    if not os.path.exists('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json'):
         return redirect('/')
     
     sfactory.assemble(sfactory.createS())

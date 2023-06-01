@@ -9,8 +9,8 @@ import sys
 
 error_msg = "Please run demo2.py to create your tokens. Additionally, please check the scopes of the API based on what you will be doing."
 
-def getToken():
-    if not os.path.exists("token.json"):
+def getToken(secure_id):
+    if not os.path.exists("token-" + str(secure_id) + ".json"):
         print(error_msg)
         sys.exit()
     else:
@@ -19,8 +19,8 @@ def getToken():
             return token
 
 
-def getAllClasses():
-    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken())
+def getAllClasses(secure_id):
+    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken(secure_id))
     classIDs = []
     classNames = []
     for c in api.json()["courses"]:
@@ -28,14 +28,14 @@ def getAllClasses():
         classNames.append(c["name"])
     return {"ids": classIDs, "names": classNames}
 
-def getClassByID(id):
-    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken())
+def getClassByID(id, secure_id):
+    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken(secure_id))
     for c in api.json()["courses"]:
         if int(c["id"]) == id:
             return c
 
-def getIDfromName(name):
-    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken())
+def getIDfromName(name, secure_id):
+    api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken(secure_id))
     for c in api.json()["courses"]:
         if c["name"] == name:
             return c["id"]
