@@ -37,7 +37,7 @@ def determineWorkTime(dueIn, difCoef, totalClasses):
     else:
         return (difCoef * 0.5)
 
-def createS():
+def createS(secure_id):
     burnerVariable = ""
 
     # "difCoef" is a numeric value to determine how hard each class is in comparison to others
@@ -48,7 +48,7 @@ def createS():
     # Step One: Set up the chatGPT prompt
     chatGPTprompt = "Assuming that math typically has the most homework, next science/physics, then english, then foreign languages, then electives, how would this list of class titles rank? Please list them in order, one per line, no other text. Thanks! Here is the list: \n"
     # Step Two: Check if the configuration files set up before the dashboard is accessed exist
-    if not os.path.isfile('temp/classes.json') or not os.path.isfile('temp/settings.json'):
+    if not os.path.isfile('temp/classes-' + str(secure_id) + '.json') or not os.path.isfile('temp/settings-' + str(secure_id) + '.json'):
         return Exception(FileNotFoundError)
     with open('temp/classes.json') as r:
         s = json.loads(r.read())
