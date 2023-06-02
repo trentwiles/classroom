@@ -190,9 +190,13 @@ def s():
     if not os.path.exists('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json'):
         return redirect('/')
     
-    sfactory.assemble(sfactory.createS())
+    sfactory.assemble(sfactory.createS(str(request.cookies.get("RANDOM_SECURE_SESSION_ID"))))
 
-    return send_file('output.pdf')
+    return send_file('output-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.pdf')
+
+@app.route("/api/v1/export")
+def export():
+    return
 
 if __name__ == '__main__':
     app.run(debug=True)
