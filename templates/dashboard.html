@@ -19,10 +19,10 @@
     function share() {
         $.get('/api/v1/export', function (response) {
             // The 'response' parameter contains the data returned from the server
-            alert(response);
+            navigator.clipboard.writeText(response);
         })
             .done(function () {
-                document.getElementById("reset").innerHTML = "Done!"
+                document.getElementById("share").innerHTML = "Copied to clipboard"
             })
             .fail(function () {
                 console.log('An error occurred during the GET request.');
@@ -36,7 +36,7 @@
 <p># of classes tracked: {{numClasses}}</p>
 <p>Max days late: {{dLate}}</p>
 <a href="/s.pdf"><button>Preview Now</button></a>
-<a onclick="share()">(Copy Public Link)</a>
+<a onclick="share()" id="share">(Copy Public Link)</a>
 <br>
 <a href="javascript:reset()"><button id="reset">Clear Settings</button></a>
 {% include 'includes/footer.html' %}
