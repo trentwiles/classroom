@@ -199,14 +199,14 @@ def s():
 def export():
     # gofile doesn't have a login req for the API, so a token/key isn't needed
     if not os.path.exists('output-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.pdf'):
-        return Response("400 Bad Request", content-type="text/plain"), 400
+        return Response("400 Bad Request", content_type="text/plain"), 400
     with open('output-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.pdf') as fi:
         files = {'file': fi}
     
     server = requests.get("https://api.gofile.io/getServer").json()["data"]["server"]
 
     r = requests.post("https://" + server + ".gofile.io/uploadFile", files=files)
-    return Response(r.json()["data"]["downloadPage"], content-type="text/plain"), 200
+    return Response(r.json()["data"]["downloadPage"], content_type="text/plain"), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
