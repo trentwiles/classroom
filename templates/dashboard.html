@@ -15,6 +15,19 @@
     window.location.href = "/"
 
     }
+
+    function share() {
+        $.get('/api/v1/export', function (response) {
+            // The 'response' parameter contains the data returned from the server
+            alert(response);
+        })
+            .done(function () {
+                document.getElementById("reset").innerHTML = "Done!"
+            })
+            .fail(function () {
+                console.log('An error occurred during the GET request.');
+            });
+    }
 </script>
 <h1>Classroom Schedule Manager</h1>
 <h3>Welcome back!</h3>
@@ -23,6 +36,7 @@
 <p># of classes tracked: {{numClasses}}</p>
 <p>Max days late: {{dLate}}</p>
 <a href="/s.pdf"><button>Preview Now</button></a>
+<a onclick="share()">(Copy Public Link)</a>
 <br>
 <a href="javascript:reset()"><button id="reset">Clear Settings</button></a>
 {% include 'includes/footer.html' %}
