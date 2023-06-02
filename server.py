@@ -191,7 +191,7 @@ def s():
     if not os.path.exists('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json'):
         return redirect('/')
     
-    sfactory.assemble(sfactory.createS(str(request.cookies.get("RANDOM_SECURE_SESSION_ID"))))
+    sfactory.assemble(sfactory.createS(str(request.cookies.get("RANDOM_SECURE_SESSION_ID"))), request.cookies.get("RANDOM_SECURE_SESSION_ID"))
 
     return send_file('output-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.pdf')
 
