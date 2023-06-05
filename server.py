@@ -7,6 +7,7 @@ import os
 import sfactory
 from google_auth_oauthlib.flow import Flow
 import random
+import requests
 #import demo2
 
 # this doesn't work for some weird reason
@@ -190,13 +191,22 @@ def s():
     if not os.path.exists('temp/settings-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json'):
         return redirect('/')
     
-    sfactory.assemble(sfactory.createS(str(request.cookies.get("RANDOM_SECURE_SESSION_ID"))))
+    sfactory.assemble(sfactory.createS(str(request.cookies.get("RANDOM_SECURE_SESSION_ID"))), request.cookies.get("RANDOM_SECURE_SESSION_ID"))
 
     return send_file('output-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.pdf')
 
 @app.route("/api/v1/export")
 def export():
-    return
+    # gofile doesn't have a login req for the API, so a token/key isn't needed
+    if not os.path.exists('output-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.pdf'):
+        return Response("400 Bad Request", content_type="text/plain"), 400
+    with open('output-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.pdf') as fi:
+        files = {'file': fi}
+    
+    server = requests.get("https://api.gofile.io/getServer").json()["data"]["server"]
+
+    r = requests.post("https://" + server + ".gofile.io/uploadFile", files=files)
+    return Response(r.json()["data"]["downloadPage"], content_type="text/plain"), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
