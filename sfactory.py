@@ -56,8 +56,9 @@ def createS(secure_id):
         print(totalClasses)
         toSubtractEachTime = 1/totalClasses
     # Step Three: Open the classes file. This contains all of the class IDs
-    with open('temp/classes.json') as r:
+    with open('temp/classes-' + str(secure_id) + '.json') as r:
         s = json.loads(r.read())
+
         for x in s:
             if x != None:
                 n = classroom.getClassByID(int(x))["name"]
