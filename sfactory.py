@@ -61,7 +61,7 @@ def createS(secure_id):
 
         for x in s:
             if x != None:
-                n = classroom.getClassByID(int(x))["name"]
+                n = classroom.getClassByID(int(x), secure_id)["name"]
                 # Step Four: add each class name to the ChatGPT prompt so they can be ordered
                 chatGPTprompt += n + "\n"
     print(chatGPTprompt)
