@@ -69,9 +69,9 @@ def createS(secure_id):
     response = chatGPT(chatGPTprompt)
     for orderedClass in response.split("\n"):
         print("30 minutes for " + orderedClass)
-        print(classroom.getCourseLoadByName(orderedClass))
+        print(classroom.getCourseLoadByName(orderedClass, secure_id))
         try:
-            for x in classroom.getCourseLoadByName(orderedClass)["courseWork"]:
+            for x in classroom.getCourseLoadByName(orderedClass, secure_id)["courseWork"]:
                 # Step Five: Now fetch all of the course work for each class
                 #print(x)
                 try:
