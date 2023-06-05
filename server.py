@@ -141,6 +141,9 @@ def quickSave():
 # Debugging route to reset everything
 @app.route('/reset')
 def reset():
+    print(session)
+    for x in session:
+        print(x)
     for f in os.listdir('temp'):
         if f != ".gitignore":
             os.remove('temp/' + f)
