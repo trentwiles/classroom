@@ -80,7 +80,7 @@ GOOGLE OAUTH LOGIN CONTENT ENDS HERE
 # First, the user selects what classes they want
 @app.route('/step1')
 def s1():
-    if os.path.exists('temp/classes.json'):
+    if os.path.exists('temp/classes-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json'):
         return redirect(url_for('s2'))
     # To do this, I needed to include Python's enumerate function.
     # https://paste.gg/p/anonymous/4c94ffb214e14e5187cd51c19fea80b9
@@ -89,12 +89,12 @@ def s1():
 # API route to go along with step one
 @app.route('/api/v1/selectClasses', methods=["POST"])
 def a1():
-    if os.path.exists('temp/classes.json'):
+    if os.path.exists('temp/classes-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json'):
         return redirect(url_for('dash'))
     c = request.form.get('classes')
     classesPicked = [int(num) for num in c.split(",")] # convert the string of "1, 2, 3, 4" into an array
     #print(c)
-    with open('temp/classes.json', 'a') as w:
+    with open('temp/classes-' + str(request.cookies.get("RANDOM_SECURE_SESSION_ID")) + '.json', 'a') as w:
         w.write(json.dumps(classesPicked))
         w.close()
     return Response(json.dumps({"message": "ok"}), content_type="application/json"), 200
