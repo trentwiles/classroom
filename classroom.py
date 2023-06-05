@@ -28,7 +28,7 @@ def getAllClasses(secure_id):
         classNames.append(c["name"])
     return {"ids": classIDs, "names": classNames}
 
-def getClassByID(id):
+def getClassByID(id, secure_id):
     api = requests.get("https://classroom.googleapis.com/v1/courses?access_token=" + getToken(secure_id))
     for c in api.json()["courses"]:
         if int(c["id"]) == id:
@@ -41,13 +41,13 @@ def getIDfromName(name, secure_id):
             return c["id"]
     return None
 
-def getCourseLoadByID(id):
-    api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork?access_token=" + getToken())
+def getCourseLoadByID(id, secure_id):
+    api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork?access_token=" + getToken(secure_id))
     return api.json()
 
-def getCourseLoadByName(name):
-    id = getIDfromName(name)
+def getCourseLoadByName(name, secure_id):
+    id = getIDfromName(name, secure_id)
     if id != None:
-        api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork?access_token=" + getToken())
+        api = requests.get("https://classroom.googleapis.com/v1/courses/" + str(id) + "/courseWork?access_token=" + getToken(secure_id))
         return api.json()
     return None
