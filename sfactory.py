@@ -50,7 +50,7 @@ def createS(secure_id):
     # Step Two: Check if the configuration files set up before the dashboard is accessed exist
     if not os.path.isfile('temp/classes-' + str(secure_id) + '.json') or not os.path.isfile('temp/settings-' + str(secure_id) + '.json'):
         return Exception(FileNotFoundError)
-    with open('temp/classes-' + secure_id + '.json') as r:
+    with open('temp/classes-' + str(secure_id) + '.json') as r:
         s = json.loads(r.read())
         totalClasses = len(s)
         print(totalClasses)
