@@ -108,5 +108,5 @@ def assemble(tasks, secure_id):
     print(float(x["allocatedTime"]))
     print(float(x["allocatedTime"]) * 60)
     html += "</table></body></html>"
-    HTML(string=html).write_pdf('output.pdf')
+    HTML(string=html).write_pdf('output-' + str(secure_id) + '.pdf')
     return None
